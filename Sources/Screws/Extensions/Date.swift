@@ -8,12 +8,9 @@
 import Foundation
 
 extension Date {
-    func getDayInYear() -> Int {
-        let cal = Calendar.current
-        return cal.ordinality(of: .day, in: .year, for: self)!
-    }
+    //MARK: Static
     
-    static func dateFromDayAndMonth(day: Int, month: Int) -> Date? {
+    public static func dateFromDayAndMonth(day: Int, month: Int) -> Date? {
         var components = DateComponents()
         
         components.hour = 0
@@ -25,11 +22,18 @@ extension Date {
         return Calendar.current.date(from: components)
     }
     
-    func get(_ components: Calendar.Component..., calendar: Calendar = Calendar.current) -> DateComponents {
+    //MARK: Instance
+    
+    public func getDayInYear() -> Int {
+        let cal = Calendar.current
+        return cal.ordinality(of: .day, in: .year, for: self)!
+    }
+    
+    public func get(_ components: Calendar.Component..., calendar: Calendar = Calendar.current) -> DateComponents {
         return calendar.dateComponents(Set(components), from: self)
     }
     
-    func get(_ component: Calendar.Component, calendar: Calendar = Calendar.current) -> Int {
+    public func get(_ component: Calendar.Component, calendar: Calendar = Calendar.current) -> Int {
         return calendar.component(component, from: self)
     }
 }
