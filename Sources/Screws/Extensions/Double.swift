@@ -8,7 +8,7 @@
 import Foundation
 
 extension Double {
-    func format(f: String) -> String {
-        String(format: "%\(f)f", self)
+    func format(f: Double) -> String {
+        String(format: "%\(f.description)f", self)
     }
 }
