@@ -43,4 +43,18 @@ final class ScrewsTests: XCTestCase {
         
         assert(formattedString == "2.13")
     }
+    
+    @available(watchOS 9.0.0, *)
+    @available(iOS 16.0.0, *)
+    @available(macOS 10.15, *)
+    @available(tvOS 16.0.0, *)
+    func testTasks() async throws {
+        let clock = ContinuousClock()
+        
+        let result = try await clock.measure {
+            try await Task.sleep(seconds: 1)
+        }
+        
+        assert(result.components.seconds >= 1)
+    }
 }
