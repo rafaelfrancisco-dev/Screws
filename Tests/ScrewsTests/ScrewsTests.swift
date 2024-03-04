@@ -44,6 +44,16 @@ final class ScrewsTests: XCTestCase {
         assert(formattedString == "2.13")
     }
     
+    func testNumbers() throws {
+        let testNumber = 1.2
+        
+        let whole = testNumber.whole
+        let fraction = testNumber.fraction.rounded(toPlaces: 2)
+        
+        assert(whole == 1)
+        assert(fraction == 0.2)
+    }
+    
     @available(watchOS 9.0.0, *)
     @available(iOS 16.0.0, *)
     @available(macOS 10.15, *)
