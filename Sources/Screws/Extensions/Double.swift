@@ -15,7 +15,7 @@ extension Double {
     ///     - f: Decimal places to format
     ///  - Returns:
     ///     The rounded double.
-    func rounded(toPlaces places:Int) -> Double {
+    public func rounded(toPlaces places:Int) -> Double {
         let divisor = pow(10.0, Double(places))
         return (self * divisor).rounded() / divisor
     }

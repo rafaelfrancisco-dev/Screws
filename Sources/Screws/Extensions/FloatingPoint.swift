@@ -11,10 +11,10 @@ extension BinaryFloatingPoint {
     /// Return integer part of number.
     /// - Returns:
     ///     The int part of the number.
-    var whole: Int { Int(modf(self).0) }
+    public var whole: Int { Int(modf(self).0) }
     
     /// Return fractional part of number.
     /// - Returns:
     ///     The fractional part of the number.
-    var fraction: Self { modf(self).1 }
+    public var fraction: Self { modf(self).1 }
 }
