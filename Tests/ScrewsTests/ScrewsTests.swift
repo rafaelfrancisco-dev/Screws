@@ -5,7 +5,7 @@ final class ScrewsTests: XCTestCase {
     func testExample() throws {
         // XCTest Documentation
         // https://developer.apple.com/documentation/xctest
-
+        
         // Defining Test Cases and Test Methods
         // https://developer.apple.com/documentation/xctest/defining_test_cases_and_test_methods
     }
@@ -67,4 +67,26 @@ final class ScrewsTests: XCTestCase {
         
         assert(result.components.seconds >= 1)
     }
+    
+#if os(macOS)
+    @available(macOS 10.15, *)
+    func testScreenSizes() async throws {
+        let width = Convenience.deviceWidth
+        let height = Convenience.deviceHeight
+        
+        assert(width != nil && width ?? 0 > 0)
+        assert(height != nil && height ?? 0 > 0)
+    }
+#else
+    @available(watchOS 9.0.0, *)
+    @available(iOS 16.0.0, *)
+    @available(tvOS 16.0.0, *)
+    func testScreenSizes() async throws {
+        let width = Convenience.deviceWidth
+        let height = Convenience.deviceHeight
+        
+        assert(width > 0)
+        assert(height > 0)
+    }
+#endif
 }
