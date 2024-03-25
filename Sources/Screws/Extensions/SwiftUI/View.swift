@@ -25,4 +25,12 @@ extension View {
             self
         }
     }
+    
+    public func centerContentsHorizontally() -> some View {
+        modifier(CenterModifierHorizontal())
+    }
+    
+    public func centerContentsVertical() -> some View {
+        modifier(CenterModifierVertical())
+    }
 }
