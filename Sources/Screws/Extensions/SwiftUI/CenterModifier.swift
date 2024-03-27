@@ -5,6 +5,7 @@
 //  Created by Rafael Francisco on 25/03/2024.
 //
 
+#if os(iOS) || os(macOS) || os(tvOS) || os(watchOS) || os(visionOS)
 import SwiftUI
 
 @available(watchOS 6.0, *)
@@ -20,7 +21,7 @@ struct CenterModifierHorizontal: ViewModifier {
             Spacer()
         }
     }
-} 
+}
 
 @available(watchOS 6.0, *)
 @available(iOS 13.0, *)
@@ -36,3 +37,4 @@ struct CenterModifierVertical: ViewModifier {
         }
     }
 }
+#endif

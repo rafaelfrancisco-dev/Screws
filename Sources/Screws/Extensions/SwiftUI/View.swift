@@ -5,6 +5,7 @@
 //  Created by Rafael Francisco on 01/03/2024.
 //
 
+#if os(iOS) || os(macOS) || os(tvOS) || os(watchOS) || os(visionOS)
 import SwiftUI
 
 @available(watchOS 6.0, *)
@@ -34,3 +35,4 @@ extension View {
         modifier(CenterModifierVertical())
     }
 }
+#endif
