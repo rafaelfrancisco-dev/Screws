@@ -37,6 +37,13 @@ final class ScrewsTests: XCTestCase {
         assert(date?.getDayInYear() == 336)
     }
     
+    func testMonths() throws {
+        let months = Date.months()
+        
+        assert(months != nil)
+        assert(months?.count == 12)
+    }
+    
     func testDouble() throws {
         let doubleTest = 2.13232434
         let formattedString = doubleTest.format(f: 0.2)

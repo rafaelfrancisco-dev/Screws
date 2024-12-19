@@ -41,4 +41,13 @@ extension Date {
     public func get(_ component: Calendar.Component, calendar: Calendar = Calendar.current) -> Int {
         return calendar.component(component, from: self)
     }
+    
+    /// - Returns:
+    /// All months in the year.
+    public static func months() -> [String]? {
+        let formatter = DateFormatter()
+        let monthComponents = formatter.monthSymbols
+        
+        return monthComponents
+    }
 }
