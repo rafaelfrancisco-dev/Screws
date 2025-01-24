@@ -27,12 +27,28 @@ extension View {
         }
     }
     
+    /// Centers the view's contents horizontally within its bounds.
+    /// - Returns: A view with horizontally centered contents using the CenterModifierHorizontal.
     public func centerContentsHorizontally() -> some View {
         modifier(CenterModifierHorizontal())
     }
     
+    /// Centers the view's contents vertically within its bounds.
+    /// - Returns: A view with vertically centered contents using the CenterModifierVertical.
     public func centerContentsVertical() -> some View {
         modifier(CenterModifierVertical())
+    }
+    
+    /// Tracks the size of the view and binds it to the provided size parameter.
+    /// - Parameter size: A binding to store the view's current CGSize.
+    /// - Returns: A view that updates the bound size parameter whenever its frame changes.
+    @available(iOS 17.0, *)
+    @available(macOS 14.0, *)
+    @available(watchOS 10.0, *)
+    @available(tvOS 17.0, *)
+    @available(visionOS 1.0, *)
+    public func frameTracker(size: Binding<CGSize>) -> some View {
+        modifier(FrameTracker(size: size))
     }
 }
 #endif
