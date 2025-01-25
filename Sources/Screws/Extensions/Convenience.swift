@@ -13,6 +13,7 @@ import UIKit
 import AppKit
 #endif
 
+@MainActor
 public class Convenience {
 #if os(watchOS)
     public static let deviceWidth:CGFloat = WKInterfaceDevice.current().screenBounds.size.width

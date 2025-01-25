@@ -5,9 +5,9 @@
 //  Created by Rafael Francisco on 24/01/2025.
 //
 
+#if os(iOS) || os(macOS) || os(tvOS) || os(watchOS) || os(visionOS)
 import SwiftUI
 
-#if os(iOS) || os(macOS) || os(tvOS) || os(watchOS) || os(visionOS)
 /// A view modifier that tracks and updates the size of a view.
 /// - Note: Uses GeometryReader to measure the view's dimensions and updates the bound size parameter when changes occur.
 @available(watchOS 10.0, *)
