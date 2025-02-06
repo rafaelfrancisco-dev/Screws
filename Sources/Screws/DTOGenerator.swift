@@ -56,5 +56,5 @@
 ///
 /// - Note: The generated DTO is always `Sendable` regardless of the `codable` parameter value,
 ///   making it safe to transfer across concurrency boundaries.
-@attached(peer)
+@attached(peer, names: arbitrary)
 public macro GenerateDTO(codable: Bool = false) = #externalMacro(module: "ScrewsMacros", type: "DTOGeneratorMacro")
