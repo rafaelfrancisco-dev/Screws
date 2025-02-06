@@ -78,8 +78,8 @@ final class ScrewsTests: XCTestCase {
 #if os(macOS)
     @available(macOS 10.15, *)
     func testScreenSizes() async throws {
-        let width = Convenience.deviceWidth
-        let height = Convenience.deviceHeight
+        let width = await Convenience.deviceWidth
+        let height = await Convenience.deviceHeight
         
         assert(width != nil && width ?? 0 > 0)
         assert(height != nil && height ?? 0 > 0)
