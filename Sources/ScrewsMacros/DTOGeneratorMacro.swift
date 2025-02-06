@@ -16,7 +16,6 @@ public struct DTOGeneratorMacro: PeerMacro {
         providingPeersOf declaration: some DeclSyntaxProtocol,
         in context: some MacroExpansionContext
     ) throws -> [DeclSyntax] {
-        // Rest of the implementation remains the same, just moved from MemberMacro to PeerMacro
         guard let classDecl = declaration.as(ClassDeclSyntax.self) else {
             throw CustomError.notAClass
         }
@@ -28,15 +27,24 @@ public struct DTOGeneratorMacro: PeerMacro {
         let className = classDecl.name.text
         let dtoName = "\(className)DTO"
         
+        // Collect properties and initializer parameters
         var properties: [(name: String, type: String)] = []
+        var initializerParams: [(label: String, name: String, type: String)] = []
+        
         for member in classDecl.memberBlock.members {
-            guard let varDecl = member.decl.as(VariableDeclSyntax.self),
-                  let binding = varDecl.bindings.first,
-                  let type = binding.typeAnnotation?.type,
-                  let pat = binding.pattern.as(IdentifierPatternSyntax.self) else {
-                continue
+            if let varDecl = member.decl.as(VariableDeclSyntax.self),
+               let binding = varDecl.bindings.first,
+               let type = binding.typeAnnotation?.type,
+               let pat = binding.pattern.as(IdentifierPatternSyntax.self) {
+                properties.append((name: pat.identifier.text, type: type.description))
+            } else if let initDecl = member.decl.as(InitializerDeclSyntax.self) {
+                for param in initDecl.signature.parameterClause.parameters {
+                    let label = param.firstName.text
+                    let name = param.secondName?.text ?? label
+                    let type = param.type.description
+                    initializerParams.append((label: label, name: name, type: type))
+                }
             }
-            properties.append((name: pat.identifier.text, type: type.description))
         }
         
         var conformances = ["Sendable"]
@@ -46,16 +54,30 @@ public struct DTOGeneratorMacro: PeerMacro {
         let conformanceList = conformances.joined(separator: ", ")
         
         let structDecl = try StructDeclSyntax("struct \(raw: dtoName): \(raw: conformanceList)") {
+            // Properties
             for prop in properties {
                 DeclSyntax("let \(raw: prop.name): \(raw: prop.type)")
             }
             
+            // Direct constructor if we found an initializer
+            if !initializerParams.isEmpty {
+                try InitializerDeclSyntax("""
+                    init(\(raw: initializerParams.map { "\($0.label) \($0.name): \($0.type)" }.joined(separator: ", ")))
+                    """) {
+                    for param in initializerParams {
+                        ExprSyntax("self.\(raw: param.label) = \(raw: param.name)")
+                    }
+                }
+            }
+            
+            // From source constructor
             try InitializerDeclSyntax("init(from source: \(raw: className))") {
                 for prop in properties {
                     ExprSyntax("self.\(raw: prop.name) = source.\(raw: prop.name)")
                 }
             }
             
+            // Copy to method
             try FunctionDeclSyntax("func copyTo(_ target: \(raw: className))") {
                 for prop in properties {
                     ExprSyntax("target.\(raw: prop.name) = self.\(raw: prop.name)")
