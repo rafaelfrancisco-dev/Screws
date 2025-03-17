@@ -8,7 +8,7 @@
 import Foundation
 
 @propertyWrapper
-public struct SkipEncode<T> {
+public struct SkipEncode<T: Sendable>: Sendable {
    public var wrappedValue: T
     
     public init(wrappedValue: T) {

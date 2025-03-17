@@ -1,9 +1,47 @@
 // swift-tools-version: 6.0
-// The swift-tools-version declares the minimum version of Swift required to build this package.
-
 import PackageDescription
 import CompilerPluginSupport
 
+#if os(macOS) || os(iOS) || os(tvOS) || os(watchOS)
+let package = Package(
+    name: "Screws",
+    platforms: [
+        .macOS(.v10_15),
+        .iOS(.v12)
+    ],
+    products: [
+        // Products define the executables and libraries a package produces, making them visible to other packages.
+        .library(
+            name: "Screws",
+            targets: ["Screws"]
+        ),
+    ],
+    dependencies: [
+        .package(url: "https://github.com/sjavora/swift-syntax-xcframeworks.git", from: "600.0.1"),
+    ],
+    targets: [
+        // Targets are the basic building blocks of a package, defining a module or a test suite.
+        // Targets can depend on other targets in this package and products from dependencies.
+        .target(
+            name: "Screws",
+            dependencies: ["ScrewsMacros"]
+        ),
+        .testTarget(
+            name: "ScrewsTests",
+            dependencies: [
+                "Screws",
+                .product(name: "SwiftSyntaxWrapper", package: "swift-syntax-xcframeworks")
+            ]
+        ),
+        .macro(
+          name: "ScrewsMacros",
+          dependencies: [
+            .product(name: "SwiftSyntaxWrapper", package: "swift-syntax-xcframeworks")
+          ]
+        ),
+    ]
+)
+#else
 let package = Package(
     name: "Screws",
     platforms: [
@@ -44,3 +82,4 @@ let package = Package(
         ),
     ]
 )
+#endif
