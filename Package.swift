@@ -15,6 +15,11 @@ let package = Package(
             name: "Screws",
             targets: ["Screws"]
         ),
+        .library(
+            name: "ScrewsDynamic",
+            type: .dynamic,
+            targets: ["Screws"]
+        )
     ],
     dependencies: [
         .package(url: "https://github.com/sjavora/swift-syntax-xcframeworks.git", from: "600.0.1"),
