@@ -35,6 +35,7 @@ let package = Package(
             name: "ScrewsTests",
             dependencies: [
                 "Screws",
+                "ScrewsMacros",
                 .product(name: "SwiftSyntaxWrapper", package: "swift-syntax-xcframeworks")
             ]
         ),
@@ -74,6 +75,7 @@ let package = Package(
             name: "ScrewsTests",
             dependencies: [
                 "Screws",
+                "ScrewsMacros",
                 .product(name: "SwiftSyntaxMacros", package: "swift-syntax"),
                 .product(name: "SwiftSyntaxMacrosTestSupport", package: "swift-syntax")
             ]

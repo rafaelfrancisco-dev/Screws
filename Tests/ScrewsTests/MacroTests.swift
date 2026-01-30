@@ -140,4 +140,99 @@ final class DTOGeneratorTests: XCTestCase {
             macros: testMacros
         )
     }
+
+    func testInitializerParametersArePreserved() throws {
+        assertMacroExpansion(
+            """
+            @GenerateDTO
+            class User {
+                var id: Int
+                var name: String
+                init(id userId: Int, name: String) {
+                    self.id = userId
+                    self.name = name
+                }
+            }
+            """,
+            expandedSource: """
+            class User {
+                var id: Int
+                var name: String
+                init(id userId: Int, name: String) {
+                    self.id = userId
+                    self.name = name
+                }
+            }
+            
+            struct UserDTO: Sendable {
+                let id: Int
+                let name: String
+                init(id userId: Int, name name: String) {
+                    self.id = userId
+                    self.name = name
+                }
+                init(from source: User) {
+                    self.id = source.id
+                    self.name = source.name
+                }
+                func copyTo(_ target: User) {
+                    target.id = self.id
+                    target.name = self.name
+                }
+            }
+            """,
+            macros: testMacros
+        )
+    }
+
+    func testMultipleBindingsAreIgnored() throws {
+        assertMacroExpansion(
+            """
+            @GenerateDTO
+            class Flags {
+                var primary, secondary: Bool
+            }
+            """,
+            expandedSource: """
+            class Flags {
+                var primary, secondary: Bool
+            }
+            
+            struct FlagsDTO: Sendable {
+                init(from source: Flags) {
+                }
+                func copyTo(_ target: Flags) {
+                }
+            }
+            """,
+            macros: testMacros
+        )
+    }
+
+    func testComputedPropertiesAreIncluded() throws {
+        assertMacroExpansion(
+            """
+            @GenerateDTO
+            class Metrics {
+                var count: Int { 42 }
+            }
+            """,
+            expandedSource: """
+            class Metrics {
+                var count: Int { 42 }
+            }
+            
+            struct MetricsDTO: Sendable {
+                let count: Int
+                init(from source: Metrics) {
+                    self.count = source.count
+                }
+                func copyTo(_ target: Metrics) {
+                    target.count = self.count
+                }
+            }
+            """,
+            macros: testMacros
+        )
+    }
 }
