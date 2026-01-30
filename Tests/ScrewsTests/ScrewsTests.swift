@@ -74,6 +74,46 @@ final class ScrewsTests: XCTestCase {
         
         assert(result.components.seconds >= 1)
     }
+
+    @available(iOS 16.0, *)
+    @available(macOS 13.0, *)
+    @available(tvOS 16.0, *)
+    @available(watchOS 9.0, *)
+    @available(visionOS 1.0, *)
+    func testTaskTimeoutCompletesBeforeDeadline() async throws {
+        let task = Task<Int, Error>(timeout: .milliseconds(200)) {
+            try await Task.sleep(nanoseconds: 20_000_000)
+            return 42
+        }
+
+        let value = try await task.value
+        XCTAssertEqual(value, 42)
+    }
+
+    @available(iOS 16.0, *)
+    @available(macOS 13.0, *)
+    @available(tvOS 16.0, *)
+    @available(watchOS 9.0, *)
+    @available(visionOS 1.0, *)
+    func testTaskTimeoutThrowsOnDeadline() async throws {
+        let timeout = Duration.milliseconds(50)
+        let task = Task.withTimeout(duration: timeout) {
+            try await Task.sleep(nanoseconds: 200_000_000)
+            return "late"
+        }
+
+        do {
+            _ = try await task.value
+            XCTFail("Expected timeout error")
+        } catch let error as TaskTimeoutError {
+            switch error {
+            case .timeout(let duration):
+                XCTAssertEqual(duration, timeout)
+            }
+        } catch {
+            XCTFail("Unexpected error: \\(error)")
+        }
+    }
     
 #if os(macOS)
     @available(macOS 10.15, *)
