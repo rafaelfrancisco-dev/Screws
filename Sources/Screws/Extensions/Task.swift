@@ -18,7 +18,9 @@ extension Task where Success == Never, Failure == Never {
 @available(tvOS 16.0, *)
 @available(watchOS 9.0, *)
 @available(visionOS 1.0, *)
+/// Errors emitted by `Task` timeout helpers.
 public enum TaskTimeoutError: Error {
+    /// The task exceeded the provided timeout duration.
     case timeout(Duration)
 }
 
@@ -49,7 +51,22 @@ public extension Task where Failure == Error {
         }
     }
 
+    /// Convenience helper that creates a task with a default priority and timeout.
+    /// - Parameters:
+    ///   - duration: The maximum duration before the task is canceled. Defaults to 10 seconds.
+    ///   - operation: The async operation to execute.
+    /// - Returns: A task that either completes or throws `TaskTimeoutError`.
     static func withTimeout(duration: Duration = .seconds(10), operation: @escaping @Sendable () async throws -> Success) -> Task {
         Task(priority: .userInitiated, timeout: duration, operation: operation)
+    }
+
+    /// Runs the operation and awaits its result, throwing if the timeout expires.
+    /// - Parameters:
+    ///   - duration: The maximum duration before the task is canceled. Defaults to 10 seconds.
+    ///   - operation: The async operation to execute.
+    /// - Returns: The result of the operation if it completes before the timeout.
+    static func withTimeout(duration: Duration = .seconds(10),
+                            operation: @escaping @Sendable () async throws -> Success) async throws -> Success {
+        try await Task.withTimeout(duration: duration, operation: operation).value
     }
 }

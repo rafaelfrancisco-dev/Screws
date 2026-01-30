@@ -60,6 +60,16 @@ final class ScrewsTests: XCTestCase {
         assert(whole == 1)
         assert(fraction == 0.2)
     }
+
+    func testNumbersNegativeFraction() throws {
+        let testNumber = -1.25
+
+        let whole = testNumber.whole
+        let fraction = testNumber.fraction.rounded(toPlaces: 2)
+
+        assert(whole == -1)
+        assert(fraction == -0.25)
+    }
     
     @available(watchOS 9.0.0, *)
     @available(iOS 16.0.0, *)
@@ -97,7 +107,7 @@ final class ScrewsTests: XCTestCase {
     @available(visionOS 1.0, *)
     func testTaskTimeoutThrowsOnDeadline() async throws {
         let timeout = Duration.milliseconds(50)
-        let task = Task.withTimeout(duration: timeout) {
+        let task: Task<String, Error> = Task.withTimeout(duration: timeout) {
             try await Task.sleep(nanoseconds: 200_000_000)
             return "late"
         }
@@ -113,6 +123,20 @@ final class ScrewsTests: XCTestCase {
         } catch {
             XCTFail("Unexpected error: \\(error)")
         }
+    }
+
+    @available(iOS 16.0, *)
+    @available(macOS 13.0, *)
+    @available(tvOS 16.0, *)
+    @available(watchOS 9.0, *)
+    @available(visionOS 1.0, *)
+    func testWithTimeoutAwaitingValue() async throws {
+        let value = try await Task.withTimeout(duration: .milliseconds(200)) {
+            try await Task.sleep(nanoseconds: 20_000_000)
+            return 7
+        }
+
+        XCTAssertEqual(value, 7)
     }
     
 #if os(macOS)
