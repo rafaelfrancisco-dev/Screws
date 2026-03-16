@@ -9,7 +9,7 @@ import Foundation
 
 /// A property wrapper that skips encoding while still supporting decoding.
 @propertyWrapper
-public struct SkipEncode<T: Sendable>: Sendable {
+public nonisolated struct SkipEncode<T: Sendable>: Sendable {
    /// The wrapped value.
    public var wrappedValue: T
     

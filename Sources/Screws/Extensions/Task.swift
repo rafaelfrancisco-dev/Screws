@@ -34,7 +34,8 @@ public extension Task where Failure == Error {
     /// completed then the task is cancelled and an error is thrown.
     init(priority: TaskPriority? = nil,
          timeout: Duration,
-         operation: @escaping @Sendable () async throws -> Success) {
+         operation: @escaping @isolated(any) @Sendable () async throws -> Success
+    ) {
         self = Task(priority: priority) {
             try await withThrowingTaskGroup(of: Success.self) { group -> Success in
                 group.addTask(operation: operation)
@@ -56,7 +57,7 @@ public extension Task where Failure == Error {
     ///   - duration: The maximum duration before the task is canceled. Defaults to 10 seconds.
     ///   - operation: The async operation to execute.
     /// - Returns: A task that either completes or throws `TaskTimeoutError`.
-    static func withTimeout(duration: Duration = .seconds(10), operation: @escaping @Sendable () async throws -> Success) -> Task {
+    static func withTimeout(duration: Duration = .seconds(10), operation: @escaping @isolated(any) @Sendable () async throws -> Success) -> Task {
         Task(priority: .userInitiated, timeout: duration, operation: operation)
     }
 
@@ -66,7 +67,7 @@ public extension Task where Failure == Error {
     ///   - operation: The async operation to execute.
     /// - Returns: The result of the operation if it completes before the timeout.
     static func withTimeout(duration: Duration = .seconds(10),
-                            operation: @escaping @Sendable () async throws -> Success) async throws -> Success {
+                            operation: @escaping @isolated(any) @Sendable () async throws -> Success) async throws -> Success {
         try await Task.withTimeout(duration: duration, operation: operation).value
     }
 }
