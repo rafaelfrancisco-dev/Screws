@@ -30,7 +30,6 @@ let package = Package(
             name: "Screws",
             dependencies: ["ScrewsMacros"],
             swiftSettings: [
-                .defaultIsolation(MainActor.self),
                 .enableUpcomingFeature("DisableOutwardActorInference"),
                 .enableUpcomingFeature("GlobalActorIsolatedTypesUsability"),
                 .enableUpcomingFeature("InferIsolatedConformances"),
